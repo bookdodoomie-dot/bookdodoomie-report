@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>엑셀 데이터 구조 분석기 (꿈동산 엑셀 데이터)</title>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        body { font-family: 'Malgun Gothic', sans-serif; padding: 20px; background-color: #f3f4f6; color: #1f2937; }
+        h1 { color: #1e3a8a; border-bottom: 2px solid #3b82f6; padding-bottom: 10px; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .btn { background-color: #3b82f6; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold; }
+        .btn:hover { background-color: #2563eb; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #d1d5db; padding: 10px; text-align: left; }
+        th { background-color: #f3f4f6; color: #1e3a8a; }
+        .error { color: red; font-weight: bold; }
+        .success { color: green; font-weight: bold; }
+        .warning { color: #b45309; background-color: #fef3c7; padding: 10px; border-left: 4px solid #d97706; margin-bottom: 15px; font-size: 14px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>📊 꿈동산 엑셀 데이터 구조 분석기 (보안 우회형 디버거)</h1>
+    
+    <div class="warning">
+        <strong>🔒 브라우저 보안 주의사항:</strong><br>
+        로컬 오프라인 환경(<code>file://</code>)에서는 웹 보안상 프로그램이 컴퓨터의 다른 파일에 자동으로 접근하는 것을 전면 차단합니다.<br>
+        이를 해결하기 위해 아래의 파일 업로드 창을 이용해 주세요. 사용자가 명시적으로 선택한 파일은 즉시 보안 장벽을 우회하여 실시간으로 완전 파싱됩니다.
+    </div>
+
+    <div class="card">
+        <h3>🔍 꿈동산 엑셀 파일 선택</h3>
+        <p>폴더에 있는 <code>꿈동산 엑셀 데이터.xlsx</code> 파일을 업로드 버튼을 눌러 선택해 주세요.</p>
+        <input type="file" id="inspect-file" accept=".xlsx, .xls" style="display: none;" onchange="handleFile(this.files)">
+        <button class="btn" onclick="document.getElementById('inspect-file').click()">엑셀 파일 선택하기</button>
+    </div>
+
+    <div id="status" style="font-weight: bold; margin-bottom: 10px;"></div>
+    <div id="output"></div>
+
+    <script>
+        function handleFile(files) {
+            if (files.length === 0) return;
+            const file = files[0];
+            const statusEl = document.getElementById('status');
+            const outputEl = document.getElementById('output');
+            
+            statusEl.className = "";
+            statusEl.textContent = "엑셀 파일을 분석 중입니다...";
+            outputEl.innerHTML = "";
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    
+                    statusEl.className = "success";
+                    statusEl.textContent = `✅ 파싱 성공! 파일명: ${file.name} (총 시트 개수: ${workbook.SheetNames.length}개)`;
+                    
+                    let html = `<div class="card">
+                        <h2>시트 목록 및 상세 셀 정보</h2>
+                        <p style="color:#6b7280; font-size:13px;">※ 시트(학생명)를 누르면 각 영역별 D18, F18, H18, J18 좌표의 정확한 원본 값과 타입을 봅니다.</p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>시트 인덱스</th>
+                                    <th>시트명 (학생명)</th>
+                                    <th>어휘력 (D18)</th>
+                                    <th>분석력 (F18)</th>
+                                    <th>추론력 (H18)</th>
+                                    <th>비판력 (J18)</th>
+                                    <th>상단 영역(행 3~6) 메타데이터 스캔 결과</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+                    
+                    workbook.SheetNames.forEach((sheetName, idx) => {
+                        const worksheet = workbook.Sheets[sheetName];
+                        if (!worksheet) return;
+                        
+                        // 특정 셀 값 취득 유틸
+                        const getVal = (addr) => {
+                            const cell = worksheet[addr];
+                            if (!cell) return `<span style="color:#9ca3af;">Empty</span>`;
+                            const valStr = cell.v !== undefined && cell.v !== null ? cell.v : (cell.w !== undefined ? cell.w : "");
+                            if (String(valStr).trim() === "") return `<span style="color:#9ca3af;">Empty</span>`;
+                            return `<strong>${valStr}</strong> <span style="font-size:11px; color:#6b7280;">(타입:${cell.t})</span>`;
+                        };
+                        
+                        // 상단 이름 후보 스캔 (C3~G6 범위 내 유효 문자열 출력)
+                        let scanInfo = [];
+                        const scanCells = [
+                            'C3', 'D3', 'E3', 'F3', 'G3',
+                            'B4', 'C4', 'D4', 'E4', 'F4', 'G4',
+                            'B5', 'C5', 'D5', 'E5', 'F5', 'G5',
+                            'B6', 'C6', 'D6', 'E6', 'F6', 'G6'
+                        ];
+                        scanCells.forEach(cell => {
+                            if (worksheet[cell]) {
+                                const val = worksheet[cell].v !== undefined && worksheet[cell].v !== null ? worksheet[cell].v : worksheet[cell].w;
+                                if (val !== undefined && val !== null && String(val).trim() !== "") {
+                                    scanInfo.push(`[${cell}]: ${val}`);
+                                }
+                            }
+                        });
+                        
+                        html += `<tr>
+                            <td>${idx + 1}</td>
+                            <td><span style="font-size:16px; color:#1e3a8a;">👤 <strong>${sheetName}</strong></span></td>
+                            <td>${getVal('D18')}</td>
+                            <td>${getVal('F18')}</td>
+                            <td>${getVal('H18')}</td>
+                            <td>${getVal('J18')}</td>
+                            <td style="font-size:11px; max-width:250px; overflow:hidden; text-overflow:ellipsis;">
+                                ${scanInfo.join(', ') || '<span style="color:#9ca3af;">스캔 데이터 없음</span>'}
+                            </td>
+                        </tr>`;
+                    });
+                    
+                    html += `</tbody></table></div>`;
+                    outputEl.innerHTML = html;
+                } catch(err) {
+                    statusEl.className = "error";
+                    statusEl.innerHTML = `❌ 에러 발생: ${err.message}`;
+                    console.error(err);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+    </script>
+</body>
+</html>

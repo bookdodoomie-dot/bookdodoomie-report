@@ -133,18 +133,6 @@
                                 <input type="number" id="num-critical" min="0" max="100" value="50" class="score-number">
                             </div>
                         </div>
-
-                        <!-- 메타인지능력 -->
-                        <div class="score-input-card">
-                            <div class="score-meta">
-                                <label for="score-meta">메타인지능력</label>
-                                <span class="badge" id="badge-meta">평균</span>
-                            </div>
-                            <div class="slider-row">
-                                <input type="range" id="score-meta" min="0" max="100" step="10" value="60" class="score-slider">
-                                <input type="number" id="num-meta" min="0" max="100" step="10" value="60" class="score-number">
-                            </div>
-                        </div>
                     </div>
                 </section>
 
@@ -170,11 +158,6 @@
                     <div class="textarea-group">
                         <label for="comment-critical">비판력 세부 의견</label>
                         <textarea id="comment-critical" rows="2" placeholder="비판력 영역에 대한 평가를 적어주세요.">글쓴이의 관점과 의도를 객관적으로 검토하는 능력이 다소 부족하며, 주장의 타당성과 신뢰성을 비판적으로 판단하는 연습이 보완되어야 합니다.</textarea>
-                    </div>
-
-                    <div class="textarea-group">
-                        <label for="comment-meta">메타인지능력 세부 의견</label>
-                        <textarea id="comment-meta" rows="2" placeholder="메타인지 영역에 대한 평가를 적어주세요.">자신의 독해 과정을 스스로 모니터링하고 부족한 부분을 찾아 보완하는 능력이 매우 안정적이며, 전략적 읽기를 수행하고 있습니다.</textarea>
                     </div>
                 </section>
 
@@ -245,42 +228,29 @@
                                             <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0.35" />
                                         </linearGradient>
                                     </defs>
-                                    <!-- 그리드 백그라운드 원 (정오각형 축) -->
-                                    <polygon points="160,60 255.1,129.1 218.8,240.9 101.2,240.9 64.9,129.1" class="grid-line max" />
-                                    <polygon points="160,80 236.1,135.3 207.0,224.7 113.0,224.7 83.9,135.3" class="grid-line" />
-                                    <polygon points="160,100 217.1,141.5 195.3,208.5 124.7,208.5 102.9,141.5" class="grid-line" />
-                                    <polygon points="160,120 198.0,147.6 183.5,192.4 136.5,192.4 122.0,147.6" class="grid-line" />
-                                    <polygon points="160,140 179.0,153.8 171.8,176.2 148.2,176.2 141.0,153.8" class="grid-line" />
-
-                                    <!-- 5대 방사선 축선 -->
+                                    <!-- 4개 영역의 정사각형 방사형 차트 -->
+                                    <polygon points="160,60 260,160 160,260 60,160" class="grid-line max" />
+                                    <polygon points="160,80 240,160 160,240 80,160" class="grid-line" />
+                                    <polygon points="160,100 220,160 160,220 100,160" class="grid-line" />
+                                    <polygon points="160,120 200,160 160,200 120,160" class="grid-line" />
+                                    <polygon points="160,140 180,160 160,180 140,160" class="grid-line" />
                                     <line x1="160" y1="160" x2="160" y2="60" class="axis-line" />
-                                    <line x1="160" y1="160" x2="255.1" y2="129.1" class="axis-line" />
-                                    <line x1="160" y1="160" x2="218.8" y2="240.9" class="axis-line" />
-                                    <line x1="160" y1="160" x2="101.2" y2="240.9" class="axis-line" />
-                                    <line x1="160" y1="160" x2="64.9" y2="129.1" class="axis-line" />
-
-                                    <!-- 눈금 텍스트 라벨 (20, 40, 60, 80) -->
+                                    <line x1="160" y1="160" x2="260" y2="160" class="axis-line" />
+                                    <line x1="160" y1="160" x2="160" y2="260" class="axis-line" />
+                                    <line x1="160" y1="160" x2="60" y2="160" class="axis-line" />
                                     <text x="164" y="84" class="grid-label">80</text>
                                     <text x="164" y="104" class="grid-label">60</text>
                                     <text x="164" y="124" class="grid-label">40</text>
                                     <text x="164" y="144" class="grid-label">20</text>
-
-                                    <!-- 데이터 다각형 영역 -->
                                     <polygon points="" id="data-poly" class="data-polygon" />
-
-                                    <!-- 데이터 꼭짓점 마커 -->
                                     <circle cx="160" cy="160" r="4.5" id="dot-vocab" class="data-dot dot-vocab" />
                                     <circle cx="160" cy="160" r="4.5" id="dot-analysis" class="data-dot dot-analysis" />
                                     <circle cx="160" cy="160" r="4.5" id="dot-inference" class="data-dot dot-inference" />
                                     <circle cx="160" cy="160" r="4.5" id="dot-critical" class="data-dot dot-critical" />
-                                    <circle cx="160" cy="160" r="4.5" id="dot-meta" class="data-dot dot-meta" />
-
-                                    <!-- 축 별 라벨 텍스트 -->
                                     <text x="160" y="42" class="axis-label" text-anchor="middle">어휘력</text>
-                                    <text x="265" y="128" class="axis-label" text-anchor="start">분석력</text>
-                                    <text x="225" y="258" class="axis-label" text-anchor="start">추론력</text>
-                                    <text x="95" y="258" class="axis-label" text-anchor="end">비판력</text>
-                                    <text x="55" y="128" class="axis-label" text-anchor="end">메타인지</text>
+                                    <text x="270" y="164" class="axis-label" text-anchor="start">분석력</text>
+                                    <text x="160" y="284" class="axis-label" text-anchor="middle">추론력</text>
+                                    <text x="50" y="164" class="axis-label" text-anchor="end">비판력</text>
                                 </svg>
                             </div>
                         </div>
@@ -317,11 +287,6 @@
                                         <td class="td-score"><span id="val-critical">50</span>점</td>
                                         <td class="td-rating"><span class="badge" id="rate-critical">보완 필요</span></td>
                                     </tr>
-                                    <tr id="row-meta">
-                                        <td class="td-field">메타인지</td>
-                                        <td class="td-score"><span id="val-meta">60</span>점</td>
-                                        <td class="td-rating"><span class="badge" id="rate-meta">평균</span></td>
-                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -351,10 +316,6 @@
                                 <tr>
                                     <th class="col-header critical-header">비판력</th>
                                     <td id="view-critical-comment">글쓴이의 관점과 의도를 객관적으로 검토하는 능력이 다소 부족하며, 주장의 타당성과 신뢰성을 비판적으로 판단하는 연습이 보완되어야 합니다.</td>
-                                </tr>
-                                <tr>
-                                    <th class="col-header meta-header">메타인지</th>
-                                    <td id="view-meta-comment">자신의 독해 과정을 스스로 모니터링하고 부족한 부분을 찾아 보완하는 능력이 매우 안정적이며, 전략적 읽기를 수행하고 있습니다.</td>
                                 </tr>
                             </tbody>
                         </table>

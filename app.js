@@ -310,7 +310,7 @@ function fitA4Preview() {
     // 스케일 가로세로 비율 중 최솟값 선정 (절대 1을 넘지 않도록 하여 본래 고해상도 인쇄 품질 보존)
     const scaleW = availableW / targetW;
     const scaleH = availableH / targetH;
-    let scale = Math.min(scaleW, scaleH);
+    let scale = scaleW;
     
     // 0.1보다 작아지지 않도록 안전장치 설정
     if (scale < 0.1) scale = 0.1;

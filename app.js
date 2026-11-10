@@ -288,7 +288,7 @@ function initScaling() {
     window.addEventListener('resize', fitA4Preview);
     
     // 혹시 모를 폰트 로딩 등으로 인한 레이아웃 오차 예방을 위해 로드 후 한번 더 실행
-    window.addEventListener('load', fitA4Preview);
+    // window.addEventListener('load', fitA4Preview);
 }
 
 function fitA4Preview() {
